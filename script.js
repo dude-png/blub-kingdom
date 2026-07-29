@@ -32,7 +32,13 @@ document.addEventListener("keydown",(e)=>{
     }
     if(e.key == "ArrowLeft"){
         moveLeft()
-    }    
+    }  
+    if (e.key == "ArrowUp" && "ArrowRight") {
+        moveDiagonalRight()
+    }
+    if (e.key == "ArrowUp" && "ArrowLeft") {
+        moveDiagonalLeft()
+    }       
 })
 function bobOffScreen(){
     if (bobLeft > window.innerWidth) {
@@ -59,6 +65,14 @@ function moveLeft(){
     bobOffScreen()
     bob.style.left = bobLeft+"px"
 }
+function moveDiagonalRight() {
+    moveRight()
+    jump()
+}
+function moveDiagonalLeft() {
+    moveLeft()
+    jump()
+}
 function platformcCollision(bobLeft, bobTop, bobWidth, bobHeight,
     platformLeft, platformTop, platformWidth, platformHeight
 ){
@@ -66,10 +80,12 @@ function platformcCollision(bobLeft, bobTop, bobWidth, bobHeight,
     let bobBottom = bobTop+bobHeight
     let platformRight = platformLeft+platformWidth
     let platformBottom = platformTop+platformHeight
-    if (bobRight>platformLeft && bobLeft<platformRight && bobBottom<platformTop) {
+    if (bobRight>platformLeft && bobLeft<platformRight && 
+        bobBottom>=platformTop && bobTop<platformTop) {
         G=0
-        bob.style.bottom = platformTop+"px"
-    }    
+        bob.style.top = platformTop-bobHeight+"px"
+    } 
+    console.log(platformTop)   
 }
 drawPlatform()
 setInterval(effectBobWithG,67)
