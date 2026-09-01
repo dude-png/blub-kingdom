@@ -1,12 +1,19 @@
 let G = 250
 let bob = document.getElementById("blub")
-let platform = document.getElementById("platform")
+let platform = document.getElementById("platform1")
 let bobTop = 500
 let bobLeft = 100
 let platformBottom = 150
 let platformLeft = 300
 let size = bob.style.width
 let isJumping = false
+let platform2 = document.getElementById("platform2")
+let platform2Top = 700
+let platform2Left = 400
+platform2.style.top =  platform2Top+"px"
+platform2.style.left =  platform2Left+"px"
+let platform3 = document.getElementById("platform3")
+let platform4 = document.getElementById("platform4")
 function drawPlatform() {
     platform.style.left = platformLeft+"px"
     platform.style.bottom = platformBottom+"px"
@@ -84,9 +91,9 @@ function platformcCollision(bobLeft, bobTop, bobWidth, bobHeight,
         bobBottom>=platformTop && bobTop<platformTop) {
         G=0
         bob.style.top = platformTop-bobHeight+"px"
+        isJumping=false
     } 
     console.log(platformTop)   
 }
 drawPlatform()
-setInterval(effectBobWithG,67)
-// bobTop<platformBottom &&
+setInterval(effectBobWithG, 67)
