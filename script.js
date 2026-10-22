@@ -1,33 +1,84 @@
 let G = 250
 let bob = document.getElementById("blub")
-let platform = document.getElementById("platform1")
+let floor = document.getElementById("floor")
+let game = document.getElementById("game")
+let coin = document.getElementById("coin")
+let scoreDisplay = document.getElementById("score")
+let score = 0
 let bobTop = 500
 let bobLeft = 100
 let platformBottom = 150
 let platformLeft = 300
 let size = bob.style.width
 let isJumping = false
-let platform2 = document.getElementById("platform2")
-let platform2Top = 700
-let platform2Left = 400
-platform2.style.top =  platform2Top+"px"
-platform2.style.left =  platform2Left+"px"
-let platform3 = document.getElementById("platform3")
-let platform4 = document.getElementById("platform4")
-function drawPlatform() {
-    platform.style.left = platformLeft+"px"
-    platform.style.bottom = platformBottom+"px"
+const platforms = [
+    {
+        x: 300,
+        y: 700
+    }, 
+    {
+        x: 350,
+        y: 600
+    },
+    {
+        x: 400,
+        y: 500
+    } 
+]
+
+
+const coins = [
+    {
+        x: 300,
+        y: 710
+    }, 
+    {
+        x: 350,
+        y: 610
+    },
+    {
+        x: 400,
+        y: 510
+    } 
+]
+for (let index = 0; index < platforms.length; index++) {
+    const element = platforms[index];
+    let platform = document.createElement('div')
+    platform.className = "platform"
+    platform.style.left = platforms[index].x+"px"
+    platform.style.top = platforms[index].y+"px"
+    game.appendChild(platform)
+    platforms[index].element = platform
 }
+for (let index = 0; index < coins.length; index++) {
+    const element = coins[index];
+    let coin = document.createElement('div')
+    coin.innerHTML = "🪙"
+    coin.className = "coin"
+    coin.style.left = coins[index].x+"px"
+    coin.style.top = coins[index].y+"px"
+    game.appendChild(coin)
+    coins[index].element = coin
+}
+
 function effectBobWithG(){
     bobTop += G 
     bob.style.top = bobTop+"px"
-    if(bobTop>window.innerHeight-152){
+    if(bobTop+bob.offsetHeight>floor.offsetTop){
         G=0
         isJumping = false
     }
     else{G=10}
-        platformcCollision(bobLeft, bobTop, bob.offsetWidth, bob.offsetHeight,
-        platformLeft, platform.offsetTop, platform.offsetWidth, platform.offsetHeight)
+    for (let index = 0; index < platforms.length; index++) {
+        const platform = platforms[index].element;
+         platformcCollision(bobLeft, bobTop, bob.offsetWidth, bob.offsetHeight,
+        platform.offsetLeft, platform.offsetTop, platform.offsetWidth, platform.offsetHeight)
+    }
+    // if(collectCoin(bob,coin)){
+    //     coin.style.display = "none"
+    //     score++
+    //     scoreDisplay.innerHTML = `score:${score}`
+    // }
 }
 document.addEventListener("keydown",(e)=>{
     if(e.key == "ArrowRight"){
@@ -95,5 +146,27 @@ function platformcCollision(bobLeft, bobTop, bobWidth, bobHeight,
     } 
     console.log(platformTop)   
 }
-drawPlatform()
+
+function collectCoin(coin, bob){
+    let coinSides = {
+        top: coin.offsetTop,
+        bottom: coin.offsetTop+coin.offsetHeight,
+        left: coin.offsetLeft,
+        right: coin.offsetLeft+coin.offsetWidth
+    }
+    let bobSides = {
+        top: bob.offsetTop,
+        bottom: bob.offsetTop+bob.offsetHeight,
+        left: bob.offsetLeft,
+        right: bob.offsetLeft+bob.offsetWidth
+    }
+    if(bobSides.right > coinSides.left && 
+        bobSides.top < coinSides.bottom &&
+        bobSides.left < coinSides.right &&
+        bobSides.bottom > coinSides.top
+    ){
+        console.log("bog")
+        return true
+    }
+}
 setInterval(effectBobWithG, 67)
